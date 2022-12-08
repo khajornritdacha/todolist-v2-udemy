@@ -37,13 +37,8 @@ app.get("/", async function (req, res) {
   const day = date.getDate();
 
   let items = await Item.find();
-  
-  let cnt = 0;
-  for (let i = 0; i < 10; i++) {
-    cnt += 1;
-  }
-  
-  res.render("list", { listTitle: day, newListItems: items, catName: "" });
+
+  res.render("list.ejs", { listTitle: day, newListItems: items, catName: "" });
 });
 
 
