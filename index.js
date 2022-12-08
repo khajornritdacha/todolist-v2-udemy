@@ -5,6 +5,7 @@ const bodyParser = require("body-parser");
 const date = require(__dirname + "/date.js");
 const mongoose = require("mongoose");
 
+const path = require("path");
 const fs = require("fs");
 
 require("dotenv").config();
@@ -43,11 +44,24 @@ app.get("/", async function (req, res) {
 
   console.log(`Dir: ${__dirname}`);
   
-  const dir = "./views/";
-  const files = fs.readdirSync(dir);
-  files.forEach(file => {
-    console.log(file);
-  })
+  try {
+    console.log("Folders in directory");
+    const dir = __dirname;
+    const files = fs.readdirSync(dir); 
+    files.forEach(file => {
+      console.log(file);
+    })
+
+    console.log("Files in views");
+    const viewDir = path.resolve("views");
+    const viewFiles = fs.readdirSync(viewDir);
+    viewFiles.forEach(file => {
+      console.log(file);
+    })
+
+  } catch (err) {
+    console.log(err);
+  }
 
   res.render("list", { listTitle: day, newListItems: items, catName: "" });
 });
