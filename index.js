@@ -15,7 +15,7 @@ const app = express();
 app.set('view engine', 'ejs');
 
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(express.static( __dirname + "/public/" ));
+app.use(express.static("public/"));
 
 const PORT = process.env.PORT || 8080;
 const DB_URL = process.env.DB_URL;
@@ -42,12 +42,12 @@ app.get("/", async function (req, res) {
 
   let items = await Item.find();
 
+  console.log(`Dir: ${__dirname}`);
   
   try {
-    console.log(`Dir: ${__dirname}`);
     console.log("Folders in directory");
     const dir = __dirname;
-    const files = fs.readdirSync(dir);
+    const files = fs.readdirSync(dir); 
     files.forEach(file => {
       console.log(file);
     })
@@ -56,14 +56,6 @@ app.get("/", async function (req, res) {
     const viewDir = path.resolve("views");
     const viewFiles = fs.readdirSync(viewDir);
     viewFiles.forEach(file => {
-      console.log(file);
-    })
-
-
-    console.log("Files in Public");
-    const publicDir = path.resolve("public");
-    const publicFiles = fs.readdirSync(publicDir);
-    publicFiles.forEach(file => {
       console.log(file);
     })
 
@@ -78,20 +70,20 @@ app.get("/", async function (req, res) {
 app.post("/", async function (req, res) {
   // Capitalize first letter
   const catName = capitalize(req.body.catName);
-
+  
   if (catName === "") {
     const item = new Item({ name: req.body.newItem });
 
     await item.save();
     items = await Item.find();
-
+    
     res.redirect("/");
   } else {
-    let list = await List.findOne({ name: catName });
-
+    let list = await List.findOne({name: catName});
+  
     list.items.push({ name: req.body.newItem });
     await list.save();
-
+  
     res.redirect(`/${catName}`);
   }
 });
@@ -100,9 +92,9 @@ app.post("/", async function (req, res) {
 app.get("/:catName", async function (req, res) {
   // Capitalize first letter
   const catName = capitalize(req.params.catName);
-
-  let list = await List.findOne({ name: catName });
-
+  
+  let list = await List.findOne({name: catName});
+  
   if (!list) {
     // console.log("Create New List");
     list = new List({
@@ -111,9 +103,9 @@ app.get("/:catName", async function (req, res) {
     });
     await list.save();
   }
-
-  res.render("list", {
-    listTitle: catName,
+  
+  res.render("list", { 
+    listTitle: catName, 
     newListItems: list.items,
     catName
   });
@@ -132,10 +124,10 @@ app.post("/delete", async function (req, res) {
     res.redirect("/");
   } else {
     let list = await List.findOne({ name: catName });
-
+  
     await list.items.pull(removeId);
     await list.save();
-
+  
     res.redirect(`/${catName}`);
   }
 });
