@@ -4,6 +4,9 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const date = require(__dirname + "/date.js");
 const mongoose = require("mongoose");
+
+const fs = require("fs");
+
 require("dotenv").config();
 
 const app = express();
@@ -38,7 +41,15 @@ app.get("/", async function (req, res) {
 
   let items = await Item.find();
 
-  res.render("list.ejs", { listTitle: day, newListItems: items, catName: "" });
+  console.log(`Dir: ${__dirname}`);
+  
+  const dir = "./views/";
+  const files = fs.readdirSync(dir);
+  files.forEach(file => {
+    console.log(file);
+  })
+
+  res.render("list", { listTitle: day, newListItems: items, catName: "" });
 });
 
 
