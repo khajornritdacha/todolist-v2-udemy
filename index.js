@@ -13,7 +13,8 @@ app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("public"));
 
-const DB_URL = process.env.DB_URL
+const PORT = process.env.PORT || 8080;
+const DB_URL = process.env.DB_URL;
 mongoose.connect(DB_URL);
 
 // Declare DB Schema and Model
@@ -112,8 +113,6 @@ app.get("/about", function (req, res) {
 });
 
 
-app.listen(process.env.PORT || 3000, function () {
-  console.log("Server started on port 3000");
+app.listen(PORT, function () {
+  console.log(`Server started on port ${PORT}`);
 });
-
-module.exports = app;
